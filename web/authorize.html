@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png"  href="assets/images/checked.png">
+    <script src="eel.js"></script>
+</head>
+<body>
+
+<h2 style="text-align: center;">Please log in the system</h2>
+
+<form autocomplete="off">
+  <div class="imgcontainer">
+    <img src="assets/images/log_ava.png" alt="Avatar" class="avatar">
+  </div>
+
+  <div class="container">
+    <label for="uname"><b>Employee's id</b></label>
+    <input type="text" placeholder="Your id" name="uname" id="empID" required autocomplete="no">
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Password" name="psw" id="empPSW" required autocomplete="new-password">
+        
+    <button onclick="get_in()">Login</button>
+  </div>
+</form>
+
+
+<script type="text/javascript" hreg>
+  async function get_in(){
+     let empID = document.getElementById("empID").value;
+     let empPSW = document.getElementById("empPSW").value;  
+     let res = await eel.authorize(empID,empPSW)();
+     console.log('Got this from Python: ' + typeof res);
+
+     if (res === 1){
+      window.location.replace("/admin.html");
+     }
+     else if (res === 2){
+      window.location.replace("/main.html");
+     }
+     else{
+      window.location.replace("/error.html");
+     }
+   }
+</script>
+
+
+</body>
+</html>

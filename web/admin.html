@@ -1,0 +1,379 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png"  href="assets/images/checked.png">
+	<script src="eel.js"></script>
+</head>
+<body onload="StartTimers()" onmousemove="ResetTimers()"> 
+  
+<h2 style="text-align: center;">Welcome Admin page</h2>
+
+<div class="setter">
+  <b>Employee's config</b>
+  <label class="switch">
+    <input type="checkbox">
+    <span class="slider round"></span>
+  </label>
+  <b>Product's config</b>
+</div>
+
+<form autocomplete="off" id="addform" onsubmit="return false;">
+  <div class="container">
+    <label for="uname"><b>Employee's ID</b><span> please fill all fields</span></label>
+    <input type="text" placeholder="Emp id" name="uname" required>
+
+    <label for="name"><b>First name</b></label>
+    <input type="text" placeholder="Emp name" name="name" required>
+
+    <label for="lname"><b>Last name</b></label>
+    <input type="text" placeholder="Emp last name" name="lname" required>
+
+    <label for="email"><b>Email</b></label>
+    <input type="email" placeholder="Emp mail" id="email" name="email" required>
+
+    <label for="phone"><b>Phone number</b></label>
+    <input type="tel" placeholder="Emp phone" id="phone" name="phone" placeholder="+7 123 456 78 90">
+
+    <label for="date-start"><b>Hire date</b></label>
+    <input type="date" id="start" name="date-start" value="2018-01-01" min="2018-01-01" max="2018-12-31" required>
+
+    <label for="jid"><b>Job ID</b></label>
+     <input type="text" placeholder="Emp JID" name="jid" required>
+
+    <label for="jpass"><b>Job password</b></label>
+    <input type="text" placeholder="Emp Jpass" placeholder="Job password" name="jpass" required>
+
+    <label for="salary"><b>Salary</b></label>
+    <input type="number" placeholder="Emp salary" id="salary" name="salary"  required>
+
+    <label for="mid"><b>Manager's ID</b></label>
+     <input type="text" placeholder="Emp MID" name="mid" required> 
+
+    <button onclick="pullemp()">Add Employee</button>   
+  
+  </div>
+</form>
+<form autocomplete="off" id="deleteform" onsubmit="return false;">
+  <div class="container">
+
+   <label for="mid"><b>Delete employee</b></label>
+   <input type="text" placeholder="Emp ID" name="mid" required> 
+   <button onclick="pullempiddelete()" style="background-color: #B22222;">Delete</button>
+</div>
+</form>
+
+<form autocomplete="off" id="searchform" onsubmit="return false;">
+  <div class="container">
+   <label for="mid"><b>Employee's details</b></label>
+    <input type="text" placeholder="Emp ID" name="mid" required> 
+    <button onclick="pullempidsearch()" style="background-color: #191970;">Search</button>
+</div>
+</form>
+
+
+<form autocomplete="off" id="addProdform" onsubmit="return false;">
+  <div class="container">
+    <label for="pid"><b>Product ID</b><span> please fill all fields</span></label>
+    <input type="text" placeholder="Product ID" name="pid" required>
+
+    <label for="pname"><b>Product name</b></label>
+    <input type="text" placeholder="Product name" name="pname" required>
+
+    <label for="desc"><b>Product description</b></label>
+    <input type="text" placeholder="Product description" name="proddesc" required>
+
+    <label for="myfile"><b>Select an Image:</b></label>
+    <input type="file" id="myfile" name="myfile"> 
+
+    <label for="price"><b>Product price</b></label>
+    <input type="number" placeholder="Product price" name="prodprice"  required>
+
+    <button  onclick="pullprod()" style="background-color: #f7dc6f;">Add product</button>   
+  
+  </div>
+</form>
+
+<form autocomplete="off" id="deleteProdform" onsubmit="return false;">
+  <div class="container">
+
+   <label for="mid"><b>Delete product</b></label>
+   <input type="text" placeholder="Product ID" name="dpid" required> 
+   <button onclick="pullprodiddelete()" style="background-color: #B22222;">Delete product</button>
+</div>
+</form>
+
+<form autocomplete="off" id="searchProdform" onsubmit="return false;">
+  <div class="container">
+   <label for="mid"><b>Product's details</b></label>
+    <input type="text" placeholder="Product ID" id="first" name="prodinfo" required> 
+    <button onclick="pullprodidsearch()" style="background-color: #191970;">Search product</button>
+</div>
+</form>
+
+
+<div id="myModal" class="modal">
+      <table id="emptable" class="styled-table">
+      <thead>
+          <tr>
+              <th>Emp id</th>
+              <th>Name</th>
+              <th>Last name</th>
+              <th>E-mail</th>
+              <th>Phone</th>
+              <th>HD</th>
+              <th>JID</th>
+              <th>Jpass</th>
+              <th>Salary</th>
+              <th>MID</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr class="active-row">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+          </tr>
+      </tbody>
+  </table>
+
+  <table id="prodtable" class="prod-styled-table">
+      <thead>
+          <tr>
+              <th>Product id</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Image</th>
+              <th>Price</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr class="active-row">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+          </tr>
+      </tbody>
+  </table>
+
+
+
+</div>
+
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+  var checkbox = document.querySelector('input[type="checkbox"]');
+
+  checkbox.addEventListener('change', function () {
+    if (checkbox.checked) {
+      document.getElementById("addform").style.display = "none";
+      document.getElementById("deleteform").style.display = "none";
+      document.getElementById("searchform").style.display = "none";
+      document.getElementById("addProdform").style.display = "block";
+      document.getElementById("deleteProdform").style.display = "block";
+      document.getElementById("searchProdform").style.display = "block";
+
+
+      console.log('Checked');
+    } else {
+      document.getElementById("addform").style.display = "block";
+      document.getElementById("deleteform").style.display = "block";
+      document.getElementById("searchform").style.display = "block";
+      document.getElementById("addProdform").style.display = "none";
+      document.getElementById("deleteProdform").style.display = "none";
+      document.getElementById("searchProdform").style.display = "none";
+
+      console.log('Not checked');
+    }
+  });
+});
+
+async function pullemp(){
+  var kvpairs = [];
+  var form = document.getElementById("addform")
+  for ( var i = 0; i < form.elements.length; i++ ) {
+     var e = form.elements[i];
+     kvpairs.push(encodeURIComponent(e.value));
+  }
+  var queryString = kvpairs.join("&");
+  let res = await eel.addEmp(queryString)();
+  if (res==1){
+    alert("Employee added");
+  }
+  else{
+    alert("Some error ocuured");
+  }
+  
+}
+
+
+async function pullprod(){
+  var kvpairs = [];
+  var form = document.getElementById("addProdform")
+  for ( var i = 0; i < form.elements.length; i++ ) {
+     var e = form.elements[i];
+     kvpairs.push(encodeURIComponent(e.value));
+  }
+  var queryString = kvpairs.join("&");
+  let res = await eel.addProd(queryString)();
+  alert("Product added");
+}
+
+
+async function pullempiddelete(){
+  var kvpairs = [];
+  var form = document.getElementById("deleteform")
+  for ( var i = 0; i < form.elements.length; i++ ) {
+     var e = form.elements[i];
+     kvpairs.push(encodeURIComponent(e.value));
+  }
+  var queryString = kvpairs.join();
+  let res = await eel.delEmp(queryString)();
+  alert("Employee removed");
+}
+
+async function pullempidsearch(){
+  var kvpairs = [];
+  var form = document.getElementById("searchform")
+  for ( var i = 0; i < form.elements.length; i++ ) {
+     var e = form.elements[i];
+     kvpairs.push(encodeURIComponent(e.value));
+  }
+  var queryString = kvpairs.join();
+
+  let res = await eel.infoEmp(queryString)();
+  const empid = res[0].Employee_id;
+  const fname = res[1].Name;
+  const lname = res[2].Surname;
+  const mail = res[3].Email;
+  const jid = res[4].Job_id;
+  const jpass = res[5].Job_password;
+  const empsalary = res[6].Salary;
+  const mid = res[7].Manager_id;
+
+  c1 = document.getElementById("emptable").rows[1].cells[0].innerHTML=empid;
+  c2 = document.getElementById("emptable").rows[1].cells[1].innerHTML=fname;
+  c3 = document.getElementById("emptable").rows[1].cells[2].innerHTML=lname;
+  c4 = document.getElementById("emptable").rows[1].cells[3].innerHTML=mail;
+  c7 = document.getElementById("emptable").rows[1].cells[6].innerHTML=jid;
+  c8 = document.getElementById("emptable").rows[1].cells[7].innerHTML=jpass;
+  c9 = document.getElementById("emptable").rows[1].cells[8].innerHTML=empsalary;
+  c10 = document.getElementById("emptable").rows[1].cells[9].innerHTML=mid;
+
+  var modal = document.getElementById("myModal");
+  var et = document.getElementById("emptable");
+  var pt = document.getElementById("prodtable");
+
+  modal.style.display = "block";
+  et.style.display="block";
+  pt.style.display="none";
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
+}
+
+
+async function pullprodiddelete(){
+  var kvpairs = [];
+  var form = document.getElementById("deleteProdform")
+  for ( var i = 0; i < form.elements.length; i++ ) {
+     var e = form.elements[i];
+     kvpairs.push(encodeURIComponent(e.value));
+  }
+  var queryString = kvpairs.join();
+  let res = await eel.delProd(queryString)();
+  alert("Product removed");
+}
+
+
+async function pullprodidsearch(){
+  var kvpairs = [];
+  var form = document.getElementById("searchProdform")
+  for ( var i = 0; i < form.elements.length; i++ ) {
+     var e = form.elements[i];
+     kvpairs.push(encodeURIComponent(e.value));
+  }
+  var queryString = kvpairs.join();
+  let res = await eel.infoProd(queryString)();
+
+  const prodid = res[0].Product_id;
+  const pname = res[1].Product_name;
+  const desc = res[2].Description;
+  const path = res[3].Img;
+  const price = res[4].Price;
+
+  const img = '<img src="'+path+'" alt=""  height=80 width=80></img>'
+
+  
+  c1 = document.getElementById("prodtable").rows[1].cells[0].innerHTML=prodid;
+  c2 = document.getElementById("prodtable").rows[1].cells[1].innerHTML=pname;
+  c3 = document.getElementById("prodtable").rows[1].cells[2].innerHTML=desc;
+  c4 = document.getElementById("prodtable").rows[1].cells[3].innerHTML=img;
+  c5 = document.getElementById("prodtable").rows[1].cells[4].innerHTML=price;
+
+  var modal = document.getElementById("myModal");
+  var et = document.getElementById("emptable");
+  var pt = document.getElementById("prodtable");
+
+  modal.style.display = "block";
+  et.style.display="none";
+  pt.style.display="block";
+
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+}
+var timoutWarning = 60000;
+var timoutNow = 120000; 
+
+var warningTimer;
+var timeoutTimer;
+
+// Start timers.
+function StartTimers() {
+    warningTimer = setTimeout("sysWarning()", timoutWarning);
+    timeoutTimer = setTimeout("sysTimeout()", timoutNow);
+}
+
+// Reset timers.
+function ResetTimers() {
+    clearTimeout(warningTimer);
+    clearTimeout(timeoutTimer);
+    StartTimers();
+}
+
+function sysWarning() {
+    alert("Session will be closed in a minute cause of unactitivity");
+}
+
+// Logout the user.
+function sysTimeout() {
+    window.location.replace("/authorize.html");
+}
+</script>
+ 
+
+</body>
+</html>
