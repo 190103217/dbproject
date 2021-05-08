@@ -1,0 +1,429 @@
+Triggers:
+
+create or replace TRIGGER is_admin
+before delete on users
+declare
+admin_id number:=0;
+v_dup number;
+begin
+    select id INTO v_dup from users;
+if v_dup = admin_id then
+   Raise_Application_Error(-20100, 'You can not delete admin.');
+end if;
+end;
+
+create or replace TRIGGER is_employee_exists
+before insert on employees
+declare
+emp_id number;
+result_query number;
+begin    
+    select employeeid INTO result_query from employees ;
+if result_query!= NULL
+then
+   Raise_Application_Error(-20100, 'Such employee already exists.');
+end if;
+end; 
+
+create or replace TRIGGER is_product_exists
+before insert on products
+declare
+prod_id number;
+result_query number;
+begin    
+    select product_id INTO result_query from products;
+if result_query!= NULL
+then
+   Raise_Application_Error(-20100, 'Such product already exists.');
+end if;
+end; 
+
+Dynamic SQL+Procedure
+
+CREATE OR REPLACE PROCEDURE calc_stats (
+  w NUMBER,
+  x NUMBER )
+IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Salary of employee is:' || w * x);
+END;
+/
+DECLARE
+  a NUMBER := 4;
+  b NUMBER := 7;
+  plsql_block VARCHAR2(100);
+BEGIN
+  plsql_block := 'BEGIN calc_stats(:y, :x); END;';
+  EXECUTE IMMEDIATE plsql_block USING a, b; 
+END;
+/
+
+a = 43
+b = a+7
+
+Cursor
+
+DECLARE
+CURSOR my_cursor IS SELECT firstname FROM employees;
+lv_emp_name employees.firstname%type;
+
+BEGIN
+OPEN my_cursor;
+
+LOOP
+FETCH my_cursor INTO lv_emp_name;
+IF my_cursor%NOTFOUND
+THEN
+EXIT;
+END IF;
+Dbms_output.put_line('Employee Fetched:'||lv_emp_name);
+END LOOP;
+--Dbms_output.put_line('Total rows fetched is:'||my_cursor%R0WCOUNT);
+CLOSE my_cursor;
+END;
+/
+
+
+DECLARE
+CURSOR products_cursor IS SELECT product_name FROM products;
+lv_prod_name products.product_name%type;
+
+BEGIN
+OPEN products_cursor;
+
+LOOP
+FETCH products_cursor INTO lv_prod_name;
+IF products_cursor%NOTFOUND
+THEN
+EXIT;
+END IF;
+Dbms_output.put_line('Products are: '||lv_prod_name);
+END LOOP;
+CLOSE products_cursor;
+END;
+/
+
+select * from employees;
+
+commit;
+
+sql_stmt := 'INSERT INTO users VALUES (:x, :x)';
+
+CREATE OR REPLACE PROCEDURE calculate_salary (
+  h NUMBER,
+  sal number)
+IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(h*sal+'$');
+END;
+/
+DECLARE
+  a NUMBER := 4;
+  b NUMBER := 9;
+  plsql_block VARCHAR2(100);
+BEGIN
+  plsql_block := 'BEGIN calculate_salary(:x,:x); END;';
+  EXECUTE IMMEDIATE plsql_block USING a,b;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE calc_stats (
+  w NUMBER,
+  x NUMBER )
+IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Salary of employee is:' || w * x);
+END;
+/
+DECLARE
+  a NUMBER := 4;
+  b NUMBER := 7;
+  plsql_block VARCHAR2(100);
+BEGIN
+  plsql_block := 'BEGIN calc_stats(:y, :x); END;';
+  EXECUTE IMMEDIATE plsql_block USING a, b; 
+END;
+/
+
+set serveroutput on;
+
+
+
+select * from orders;
+
+DECLARE
+CURSOR employees_cursor(emp_id number) IS SELECT * FROM employees where employee_id = ;
+lv_info varchar2 (250 bytes);
+
+e_id number
+
+
+BEGIN
+OPEN employees_cursor;
+
+LOOP
+FETCH employeess_cursor(e_id) INTO lv_info;
+IF products_cursor%NOTFOUND
+THEN
+EXIT;
+END IF;
+Dbms_output.put_line('Products are: '||lv_prod_name);
+END LOOP;
+CLOSE products_cursor;
+END;
+/
+
+CREATE OR REPLACE PACKAGE personal AS
+   TYPE emp_list IS TABLE OF employees.employee_id%TYPE;
+   PROCEDURE award_bonuses(emp_bonus IN emp_list);
+END personal;
+/
+
+CREATE OR REPLACE PACKAGE BODY personal AS
+ PROCEDURE award_bonuses(emp_bonus emp_list) IS
+  BEGIN
+    FOR i IN emp_bonus.FIRST..emp_bonus.LAST
+    LOOP
+     UPDATE employees SET salary = salary + 1 
+         WHERE employees.employee_id = emp_bonus(i);
+   END LOOP;
+  END;
+ END;
+/
+
+DECLARE
+  good_employees personal.emp_list;
+BEGIN
+  good_employees :=  personal.emp_list(2,11);
+  personal.award_bonuses(good_employees);
+END;
+/
+
+create  table orders(order_id number(*,0),employee_id number(*,0),product_id number(*,0), product_price number(*,0),quantity number(*,0),order_date timestamp);
+select * from orders;
+
+create or replace procedure create_order(
+Order_id int,  
+Employee_id int,  
+Product_id int,  
+Product_price int,  
+quantity int,
+order_date timestamp
+)
+as
+begin
+insert into orders values(Order_id, Employee_id, Product_id, Product_price, quantity, order_date);
+commit;
+end;
+
+select * from employees;
+
+begin
+create or replace package products_pack as
+procedure create_product;
+procedure update_product;
+procedure delete_product;
+end;
+/
+
+create or replace package body products_pack as
+   procedure create_product(
+ProductID int,  
+ProductName varchar,  
+ProductDescription varchar,  
+Product_image varchar,  
+Product_price int
+)
+as
+begin
+insert into products values(ProductID,ProductName,ProductDescription,Product_image,Product_price);
+commit;
+end;
+
+procedure update_product(
+ProductID int,  
+ProductName varchar,  
+ProductDescription varchar,  
+Product_image varchar,  
+Product_price int
+)
+as
+begin
+update products set product_name = ProductName and where product_id = ProductID
+commit;
+end;
+
+create or replace procedure delete_product(
+p_id in out int)
+is
+begin
+delete from products where Product_id=p_id;
+commit;
+end;
+ 
+end products_pack;
+/
+
+
+create or replace TRIGGER is_admin
+before delete on users
+declare
+admin_id number:=0;
+v_dup number;
+begin
+    select id INTO v_dup from users;
+if v_dup = admin_id then
+   Raise_Application_Error(-20100, 'You can not delete admin.');
+end if;
+end;
+
+create or replace TRIGGER is_employee_exists
+before insert on employees
+declare
+emp_id number;
+result_query number;
+begin    
+    select employeeid INTO result_query from employees ;
+if result_query!= NULL
+then
+   Raise_Application_Error(-20100, 'Such employee already exists.');
+end if;
+end; 
+
+create or replace TRIGGER is_product_exists
+before insert on products
+declare
+prod_id number;
+result_query number;
+begin    
+    select product_id INTO result_query from products;
+if result_query!= NULL
+then
+   Raise_Application_Error(-20100, 'Such product already exists.');
+end if;
+end; 
+
+select * from products;
+alter table products add product_type varchar2(250) not null;
+delete from products where product_id=1;
+insert into products values(1,'Netflix Chill',' Peanut Butter Ice Cream with Sweet Salty Pretzel Swirls  Fudge Brownies','x055555555',5,'ice-cream' );
+
+select * from schedule_employees;
+
+create or replace FUNCTION CALC_SALARY(e_salary IN OUT int,e_employeeid in int) 
+   RETURN NUMBER 
+   IS 
+   e_employeeid int;
+   e_salary int;
+   e_hours int;
+   BEGIN 
+      SELECT salary 
+      INTO e_salary 
+      FROM employees 
+      WHERE employeeid = e_employeeid; 
+      select 24 * sysdate - (sysdate-7) into e_hours from dual;
+      RETURN(e_salary*e_hours); 
+    END;
+
+
+create or replace procedure delete_product(
+p_id in out int)
+is
+begin
+delete from products where Product_id=p_id;
+commit;
+end;
+
+create or replace procedure create_product(
+ProductID int,  
+ProductName varchar,  
+ProductDescription varchar,  
+Product_image varchar,  
+Product_price int
+)
+as
+begin
+insert into products values(ProductID,ProductName,ProductDescription,Product_image,Product_price);
+commit;
+end;
+
+create or replace procedure job_start(
+u_id in out int)
+is
+begin
+insert into schedule_employees values(u_id,current_timestamp,current_timestamp+1);
+commit;
+end;
+
+create or replace procedure job_end(
+u_id in out int)
+is
+begin
+update schedule_employees set end_time=current_timestamp where employee_id=u_id;
+commit;
+end;
+
+create or replace PACKAGE BODY emp_bonus AS
+  PROCEDURE calc_bonus
+    (date_hired employees.hire_date%TYPE) IS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE
+      ('Employees hired on ' || date_hired || ' get bonus.');
+  END;
+END emp_bonus;
+
+
+create or replace procedure job_end(
+u_id in out int)
+is
+begin
+update schedule_employees set end_time=current_timestamp where employee_id=u_id;
+commit;
+end;
+
+
+CREATE SEQUENCE  "PROJECT_ADMIN"."ID_NEW_EMPLOYEE"  MINVALUE 1 MAXVALUE 1000 INCREMENT BY 1 START WITH 81 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+
+create or replace procedure create_user(
+job_password varchar2
+)
+as
+job_id number(3);
+BEGIN
+select new_employee_job_id.nextval into job_id from dual;
+insert into PROJECT_ADMIN.users values(job_id,job_password);
+END;
+exec create_user('test1');
+commit;
+
+select * from users;
+
+create or replace procedure create_employee(
+first_name varchar2,
+last_name varchar2,
+email varchar2,
+phone_number varchar2,
+job_password varchar2
+)
+as
+employee_id number(3);
+hire_date date;
+job_id number(3);
+BEGIN
+select id_new_employee.nextval into employee_id from dual;
+
+select current_date into hire_date from dual;
+
+select new_employee_job_id.nextval into job_id from dual;
+
+insert into Project_admin.employees values(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,job_password,9.25,0);
+END;
+
+exec create_employee('Dimash','Nurbolov','nurbolov@gmail.com','7654123','test2');
+
+create or replace procedure delete_user(
+u_id in out int)
+is
+begin
+delete from users where id=u_id;
+end;
